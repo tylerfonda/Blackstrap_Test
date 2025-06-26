@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Blackstrap{% endblock %}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+        
+        body {
+            font-family: 'Crimson Text', serif;
+            background: #fdfcf8;
+            color: #2c2420;
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(120, 100, 85, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(85, 70, 60, 0.02) 0%, transparent 50%);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 252, 245, 0.8);
+            padding: 3rem;
+            border: 1px solid rgba(139, 125, 107, 0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+        }
+        
+        h1, h2, h3 {
+            font-family: 'EB Garamond', serif;
+            font-weight: 500;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            border-bottom: 2px solid #8b7d6b;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .molasses-drop {
+            display: inline-block;
+            width: 8px;
+            height: 12px;
+            background: #3d2914;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            margin: 0 0.5rem;
+            vertical-align: baseline;
+        }
+        
+        .pause-mark {
+            font-size: 2rem;
+            color: #8b7d6b;
+            margin: 2rem 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
+

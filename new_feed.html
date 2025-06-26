@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Create New Feed - Blackstrap{% endblock %}
+
+{% block content %}
+<h1>Create New Feed <span class="molasses-drop"></span></h1>
+
+<div class="pause-mark">❋</div>
+
+<p style="font-style: italic; color: #786554; text-align: center; margin: 2rem 0;">
+    Define a topic for the Seeker to explore, and the Synthesizer to weave into narratives.
+</p>
+
+<form id="new-feed-form" method="post" style="margin: 2rem 0;">
+    <div style="margin: 2rem 0;">
+        <label for="name" style="display: block; font-weight: 600; color: #3d2914; margin-bottom: 0.5rem; font-family: 'EB Garamond', serif; font-size: 1.1rem;">
+            Feed Name
+        </label>
+        <input type="text" 
+               id="name" 
+               name="name" 
+               required
+               style="width: 100%; padding: 1rem; border: 2px solid #d4c4a8; background: #fdfcf8; color: #2c2420; font-family: 'Crimson Text', serif; font-size: 1rem; border-radius: 4px;"
+               placeholder="e.g., Climate Adaptation Research">
+    </div>
+
+    <div style="margin: 2rem 0;">
+        <label for="topic" style="display: block; font-weight: 600; color: #3d2914; margin-bottom: 0.5rem; font-family: 'EB Garamond', serif; font-size: 1.1rem;">
+            Research Topic
+        </label>
+        <textarea id="topic" 
+                  name="topic" 
+                  required
+                  rows="3"
+                  style="width: 100%; padding: 1rem; border: 2px solid #d4c4a8; background: #fdfcf8; color: #2c2420; font-family: 'Crimson Text', serif; font-size: 1rem; border-radius: 4px; resize: vertical;"
+                  placeholder="Describe the scholarly topic you want to explore..."></textarea>
+    </div>
+
+    <div style="margin: 2rem 0;">
+        <label for="guidance" style="display: block; font-weight: 600; color: #3d2914; margin-bottom: 0.5rem; font-family: 'EB Garamond', serif; font-size: 1.1rem;">
+            Synthesis Guidance <span style="font-weight: 400; color: #786554; font-size: 0.9rem;">(optional)</span>
+        </label>
+        <textarea id="guidance" 
+                  name="guidance" 
+                  rows="4"
+                  style="width: 100%; padding: 1rem; border: 2px solid #d4c4a8; background: #fdfcf8; color: #2c2420; font-family: 'Crimson Text', serif; font-size: 1rem; border-radius: 4px; resize: vertical;"
+                  placeholder="Guide the Synthesizer's perspective: focus areas, themes to emphasize, questions to explore..."></textarea>
+    </div>
+
+    <div style="margin: 2rem 0;">
+        <label style="display: block; font-weight: 600; color: #3d2914; margin-bottom: 1rem; font-family: 'EB Garamond', serif; font-size: 1.1rem;">
+            Sources
+        </label>
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+            <label style="display: flex; align-items: center; color: #2c2420; cursor: pointer;">
+                <input type="checkbox" name="sources" value="scholar" checked
+                       style="margin-right: 0.5rem; transform: scale(1.2);">
+                Google Scholar
+            </label>
+            <label style="display: flex; align-items: center; color: #2c2420; cursor: pointer;">
+                <input type="checkbox" name="sources" value="arxiv" checked
+                       style="margin-right: 0.5rem; transform: scale(1.2);">
+                arXiv
+            </label>
+            <label style="display: flex; align-items: center; color: #2c2420; cursor: pointer;">
+                <input type="checkbox" name="sources" value="rss"
+                       style="margin-right: 0.5rem; transform: scale(1.2);">
+                RSS Feeds
+            </label>
+        </div>
+    </div>
+
+    <div class="pause-mark">❋</div>
+
+    <div style="text-align: center; margin: 3rem 0;">
+        <button type="submit" 
+                style="background: #3d2914; color: #fdfcf8; padding: 1rem 2rem; border: none; font-family: 'EB Garamond', serif; font-size: 1.1rem; cursor: pointer; margin-right: 1rem;">
+            Create Feed
+        </button>
+        <a href="{{ url_for('index') }}" 
+           style="color: #786554; text-decoration: none; border-bottom: 1px solid #a69280; padding-bottom: 2px;">
+           Cancel
+        </a>
+    </div>
+</form>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div style="margin: 2rem 0;">
+      {% for category, message in messages %}
+        <div style="padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #8b7d6b; background: rgba(139, 125, 107, 0.1);">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+{% endblock %}
+

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Narratives - Blackstrap{% endblock %}
+
+{% block content %}
+<h1>Narratives <span class="molasses-drop"></span></h1>
+
+<div class="pause-mark">❋</div>
+
+{% if narratives %}
+    {% for narrative in narratives %}
+    <div style="border: 1px solid #d4c4a8; padding: 2rem; margin: 2rem 0; background: rgba(251, 248, 241, 0.6);">
+        <h2 style="margin-top: 0; color: #3d2914;">{{ narrative.title }}</h2>
+        <div style="color: #2c2420; line-height: 1.8; margin: 1.5rem 0;">
+            {{ narrative.content | safe }}
+        </div>
+        <div style="text-align: right; margin-top: 2rem; font-size: 0.9rem; color: #786554;">
+            Created: {{ narrative.created_at }}
+        </div>
+        
+        <div class="pause-mark">❋</div>
+        
+        <div style="margin-top: 2rem;">
+            <h3 style="color: #3d2914; font-size: 1.1rem;">Your Thoughts</h3>
+            <form method="post" action="/feedback/{{ narrative.id }}">
+                <textarea name="notes" 
+                          placeholder="What resonated with you? What questions arose?"
+                          style="width: 100%; padding: 1rem; border: 2px solid #d4c4a8; background: #fdfcf8; color: #2c2420; font-family: 'Crimson Text', serif; font-size: 1rem; border-radius: 4px; resize: vertical; margin: 0.5rem 0;"
+                          rows="3"></textarea>
+                <div style="margin-top: 1rem;">
+                    <label style="color: #3d2914; font-family: 'EB Garamond', serif;">
+                        Rating:
+                        <select name="rating" style="margin-left: 0.5rem; padding: 0.5rem; border: 2px solid #d4c4a8; background: #fdfcf8; color: #2c2420;">
+                            <option value="">--</option>
+                            <option value="1">1 - Needs work</option>
+                            <option value="2">2 - Okay</option>
+                            <option value="3">3 - Good</option>
+                            <option value="4">4 - Very good</option>
+                            <option value="5">5 - Excellent</option>
+                        </select>
+                    </label>
+                    <button type="submit" 
+                            style="background: #3d2914; color: #fdfcf8; padding: 0.5rem 1rem; border: none; font-family: inherit; cursor: pointer; margin-left: 1rem;">
+                        Save Feedback
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <p style="font-style: italic; color: #786554; text-align: center; margin: 3rem 0;">
+        No narratives yet. The Synthesizer awaits new material to weave into understanding.
+    </p>
+    
+    <div style="text-align: center; margin: 2rem 0;">
+        <form method="post" action="/synthesize/{{ feed_id }}">
+            <button type="submit" 
+                    style="background: #3d2914; color: #fdfcf8; padding: 1rem 2rem; border: none; font-family: 'EB Garamond', serif; font-size: 1.1rem; cursor: pointer;">
+                Begin Synthesis
+            </button>
+        </form>
+    </div>
+{% endif %}
+
+<div class="pause-mark">❋</div>
+
+<div style="text-align: center; margin: 3rem 0;">
+    <a href="{{ url_for('index') }}" 
+       style="color: #786554; text-decoration: none; border-bottom: 1px solid #a69280; padding-bottom: 2px;">
+       Return to Feeds
+    </a>
+</div>
+
+{% endblock %}
