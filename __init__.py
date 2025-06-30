@@ -1,9 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 import uuid
 import os
+from dotenv import load_dotenv
 from .db.models import Database, Feed, Article, Narrative, MCPEntry
 
 def create_app():
+    # Load environment variables from .env file
+    load_dotenv()
+    
     app = Flask(__name__)
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
     
@@ -56,13 +60,17 @@ def create_app():
             conn.close()
             
             if feed_row:
+                app.logger.info(f"Starting synthesis for feed {feed_id}: {feed_row['topic']}")
                 from .agents.synthesizer import SynthesizerAgent
                 synthesizer = SynthesizerAgent()
                 narrative_id = synthesizer.synthesize_narrative(feed_id, feed_row['topic'], feed_row['guidance'] or "")
+                app.logger.info(f"Synthesis completed successfully. Narrative ID: {narrative_id}")
                 flash('New narrative synthesized successfully!', 'success')
             else:
+                app.logger.warning(f"Feed not found: {feed_id}")
                 flash('Feed not found', 'error')
         except Exception as e:
+            app.logger.exception(f"Synthesis failed for feed {feed_id}")
             flash(f'Synthesis failed: {str(e)}', 'error')
         
         return redirect(url_for('narratives', feed_id=feed_id))
