@@ -1,6 +1,7 @@
 from openai import OpenAI
 import json
 import os
+import logging
 from typing import List, Dict, Optional
 from ..db.models import Database, Narrative, Article, MCPEntry
 
@@ -13,20 +14,29 @@ class SynthesizerAgent:
     def __init__(self):
         self.db = Database()
         # Set up OpenAI client - will use environment variable OPENAI_API_KEY
-        self.client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+        api_key = os.getenv('OPENAI_API_KEY')
+        if not api_key:
+            raise RuntimeError("OPENAI_API_KEY environment variable is required but not set")
+        
+        self.client = OpenAI(api_key=api_key)
+        logging.info("SynthesizerAgent initialized with OpenAI client")
     
     def synthesize_narrative(self, feed_id: str, topic: str, guidance: str = "") -> str:
         """
         Main entry point: synthesize articles into a narrative for a feed.
         Returns narrative ID.
         """
+        logging.info(f"Starting narrative synthesis for feed {feed_id}, topic: {topic}")
+        
         # First, use Seeker to get fresh articles
         from .seeker import SeekerAgent
         seeker = SeekerAgent()
         article_ids = seeker.seek_articles(feed_id, topic)
+        logging.info(f"Retrieved {len(article_ids)} articles for synthesis")
         
         # Get article content
         articles = self._get_articles_content(article_ids)
+        logging.info(f"Loaded content for {len(articles)} articles")
         
         # Create synthesis prompt
         prompt = self._create_synthesis_prompt(topic, articles, guidance)
@@ -41,6 +51,7 @@ class SynthesizerAgent:
         
         # Save narrative
         narrative_id = Narrative.create(feed_id, title, content, article_ids)
+        logging.info(f"Created narrative {narrative_id} with title: {title}")
         
         # Update MCP with new insights
         self._update_mcp(narrative_content, topic)
@@ -99,6 +110,7 @@ Create a narrative that helps readers understand the current state and future po
     
     def _generate_with_openai(self, prompt: str) -> str:
         """Generate narrative using OpenAI GPT"""
+        logging.info("Sending request to OpenAI API")
         try:
             response = self.client.chat.completions.create(
                 model="gpt-3.5-turbo",
@@ -109,8 +121,11 @@ Create a narrative that helps readers understand the current state and future po
                 max_tokens=2000,
                 temperature=0.7
             )
-            return response.choices[0].message.content.strip()
+            content = response.choices[0].message.content.strip()
+            logging.info(f"OpenAI API request successful, generated {len(content)} characters")
+            return content
         except Exception as e:
+            logging.error(f"OpenAI API request failed: {type(e).__name__}: {str(e)}")
             # Fallback content if OpenAI fails
             return f"""# Synthesis Pending
             
@@ -131,3 +146,5 @@ This synthesis would normally weave together insights from the collected article
             content_text=narrative_content,
             metadata={"topic": topic}
         )
+        logging.info("Updated Master Context Profile with new narrative")
+
