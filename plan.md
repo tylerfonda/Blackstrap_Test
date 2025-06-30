@@ -32,3 +32,4 @@ Anti-technological design that invites deep reading. Serifs, texture, and visual
 ## Tech Stack
 - Flask + SQLite + OpenAI GPT/Embeddings
 - Start simple, scale to FAISS/Chroma later
+
